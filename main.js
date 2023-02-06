@@ -78,7 +78,7 @@ function cleanOutput(output) {
 
     let output_array = output_string.split('')
 
-    for (output_array.length > 3) {
+    if (output_array.length > 3) {
         for (let i = output_array.length - 3; i > 0; i -= 3) {
             output_array.splice(i, 0, ',')
         }
