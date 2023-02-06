@@ -11,7 +11,7 @@ for (let key of keys) {
         if (value == 'clear') {
             input = '';
             display_input.innerHTML = '';
-            display_display_output.innerHTML = ''
+            display_output.innerHTML = ''
         } else if (value == 'backspace') {
             input = input.slice(0, -1)
             display_input.innerHTML = input;
