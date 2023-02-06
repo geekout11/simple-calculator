@@ -16,14 +16,14 @@ for (let key of keys) {
             input = input.slice(0, -1)
             display_input.innerHTML = cleanInput(input);
         } else if (value == '=') {
-            let result = eval(input);
+            let result = eval(convertPercent(input));
 
             display_output.innerHTML = cleanOutput(result);
         } else if (value == 'brackets') {
             if (
-                input.indexOf("(") == -1 ||
-                input.indexOf("(") != -1 &&
-                input.indexOf(")") != -1 &&
+                input.indexOf('(') == -1 ||
+                input.indexOf('(') != -1 &&
+                input.indexOf(')') != -1 &&
                 input.lastIndexOf('(') < input.lastIndexOf(')')
             ) {
                 input += '('
@@ -34,14 +34,16 @@ for (let key of keys) {
                 input.indexOf(')') != -1 &&
                 input.lastIndexOf('(') > input.lastIndexOf(')')
             ) {
-                input += ")"
+                input += ')'
             }
 
             display_input.innerHTML = cleanInput(input);
 
         } else {
-            input += value;
-            display_input.innerHTML = cleanInput(input);
+            if (validateInput(value)) {
+                input += value;
+                display_input.innerHTML = cleanInput(input);
+            }
         }
     })
 }
@@ -52,19 +54,19 @@ function cleanInput(input) {
 
     for (let i = 0; i < input_array_length; i++) {
         if (input_array[i] == '*') {
-            input_array[i] = ` <span class="operator">x</span> `
+            input_array[i] = ` <span class='operator'>x</span> `
         } else if (input_array[i] == '/') {
-            input_array[i] = ` <span class="operator">÷</span> `
+            input_array[i] = ` <span class='operator'>÷</span> `
         } else if (input_array[i] == '+') {
-            input_array[i] = ` <span class="operator">+</span> `
+            input_array[i] = ` <span class='operator'>+</span> `
         } else if (input_array[i] == '-') {
-            input_array[i] = ` <span class="operator">-</span> `
+            input_array[i] = ` <span class='operator'>-</span> `
         } else if (input_array[i] == '(') {
-            input_array[i] = ` <span class="brackets">(</span> `
+            input_array[i] = ` <span class='brackets'>(</span> `
         } else if (input_array[i] == ')') {
-            input_array[i] = ` <span class="brackets">)</span> `
+            input_array[i] = ` <span class='brackets'>)</span> `
         } else if (input_array[i] == '%') {
-            input_array[i] = ` <span class="percent">%</span> `
+            input_array[i] = ` <span class='percent'>%</span> `
         }
     }
 
@@ -90,4 +92,35 @@ function cleanOutput(output) {
     }
 
     return output_array.join('')
+}
+
+function validateInput(value) {
+    let last_input = input.slice(-1)
+    let operators = ['+', '-', '*', '/']
+
+    if (value == '.' && last_input == '.') {
+        return false
+    }
+
+    if (operators.includes(value)) {
+        if (operators.includes(last_input)) {
+            return false
+        } else {
+            return true
+        }
+    }
+
+    return true
+}
+
+function convertPercent(input) {
+    let input_array = input.split('')
+
+    for (let i = 0; i < input_array.length; i++) {
+        if (input_array[i] == '%') {
+            input_array[i] = '/100'
+        }
+    }
+
+    return input_array.join('')
 }
